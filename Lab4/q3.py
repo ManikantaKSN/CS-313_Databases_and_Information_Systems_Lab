@@ -1,4 +1,5 @@
 import psycopg2
+
 def add_movie_info(connection, actor_id, movies_info):
     mycursor = conn.cursor()
     for i, (movie_id, role) in enumerate(movies_info, 1):
@@ -7,14 +8,11 @@ def add_movie_info(connection, actor_id, movies_info):
         if exists:
             mycursor.execute("INSERT INTO movie_cast (mov_id, act_id, role) VALUES (%s, %s, %s)",
                                (movie_id, actor_id, role))
-            print(f"Movie number {i} information added to the movie_cast table successfully")
         else:
-            print(f"Movie number {i} is not present in the database. Rolling back the transaction.")
+            print(f"Movie number {i} is not present in the database. Database is not updated")
             connection.rollback()
-            return False
-        
+            return False 
     connection.commit()
-    print("All movie information added to the movie_cast table. Transaction committed successfully")
     return True
 
 conn = psycopg2.connect(database='moviedb',
@@ -33,6 +31,5 @@ for i in range(1, num_movies + 1):
 
 conn.autocommit = False
 success = add_movie_info(conn, actor_id, movies_info)
-    
-if not success:
-    print("Database is not updated")
+if success:
+    print("Database update successfull")
