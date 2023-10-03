@@ -1,0 +1,18 @@
+-----------------------------------TEST CASE 1-------------------------
+When only one movie entered: 
+                TERMINAL 1                                                  TERMINAL 2
+        Enter actor id: 149
+                                                                Enter actor id: 149
+        Enter the number of movies: 1
+                                                                Enter the number of movies: 1
+        Enter movie id of movie number 1: 921
+                                                                Enter movie id of movie number 1: 921
+        Enter role of the actor in movie number 1: Erey
+                                                                Enter role of the actor in movie number 1: Wendy
+
+psycopg2.errors.UniqueViolation: duplicate key value violates unique constraint "movie_cast_pkey"
+DETAIL:  Key (mov_id, act_id)=(921, 149) already exists.
+
+-----------------------------------TEST CASE 2-------------------------
+When two movies entered:
+                TERMINAL 1                                                  TERMINAL 2                                               TERMINAL 2
