@@ -11,7 +11,7 @@ mycursor = conn.cursor()
 # act_id of an actor inserted later is greater in value than that of an actor inserted earlier.
 mycursor.execute("SELECT MAX(act_id) FROM actor")
 actor_id = mycursor.fetchone()[0]
-print("For actor_id =",actor_id)
+print("For actor_id : ",actor_id)
 no_of_movies = int(input("Enter the number of movies: "))
 movies_info = []
 success = True
