@@ -8,11 +8,11 @@ conn = psycopg2.connect(database='moviedb',
 mycursor = conn.cursor()
 
 try:
-    sql_command = """
+    command = """
     ALTER TABLE movie_cast
     ADD PRIMARY KEY (mov_id, act_id);
     """
-    mycursor.execute(sql_command)
+    mycursor.execute(command)
     conn.commit()
     print("Primary key declared for table 'movie_cast'")
 except:
