@@ -1,18 +1,240 @@
------------------------------------TEST CASE 1-------------------------
-When only one movie entered: 
+---------------------------------------------TEST CASE 1-----------------------------------------------
+
                 TERMINAL 1                                                  TERMINAL 2
-        Enter actor id: 149
-                                                                Enter actor id: 149
-        Enter the number of movies: 1
-                                                                Enter the number of movies: 1
-        Enter movie id of movie number 1: 921
-                                                                Enter movie id of movie number 1: 921
-        Enter role of the actor in movie number 1: Erey
-                                                                Enter role of the actor in movie number 1: Wendy
+    Enter the previously inserted actor_id : 125
+    Enter the number of movies: 1                                   
+								    Enter the previously inserted actor_id : 125
+                                                                    Enter the number of movies: 1
+    Enter the movie id of movie number 1 : 921
+                                                                    Enter the movie id of movie number 1 : 921
+    Enter the role of the actor in the movie number 1 : Ram
+                                                                    Enter the role of the actor in the movie number 1 : Rama
+    OBSERVATION : Error occurs in terminal 2 after we execute the file in terminal 1
+    psycopg2.errors.UniqueViolation: duplicate key value violates unique constraint "movie_cast_pkey"
+    DETAIL:  Key (mov_id, act_id)=(921, 125) already exists.
 
-psycopg2.errors.UniqueViolation: duplicate key value violates unique constraint "movie_cast_pkey"
-DETAIL:  Key (mov_id, act_id)=(921, 149) already exists.
+---------------------------------------------TEST CASE 2-----------------------------------------------
 
------------------------------------TEST CASE 2-------------------------
-When two movies entered:
-                TERMINAL 1                                                  TERMINAL 2                                               TERMINAL 2
+                TERMINAL 1                                                  TERMINAL 2
+    Enter the previously inserted actor_id : 125
+    Enter the number of movies: 1
+                                                                    Enter the previously inserted actor_id : 125
+								    Enter the number of movies: 1
+    Enter the movie id of movie number 1 : 919
+                                                                    Enter the movie id of movie number 1 : 921
+    Enter the role of the actor in the movie number 1 : Ram
+                                                                    Enter the role of the actor in the movie number 1 : Rama
+
+    OBSERVATION : No error occurs and Database is updated successfully.
+
+---------------------------------------------TEST CASE 3-----------------------------------------------
+
+                TERMINAL 1                                                  TERMINAL 2
+    Enter the previously inserted actor_id : 125
+    Enter the number of movies: 2
+                                                                    Enter the previously inserted actor_id : 125
+								    Enter the number of movies: 1
+    Enter the movie id of movie number 1 : 921
+                                                                    Enter the movie id of movie number 1 : 919
+    Enter the role of the actor in the movie number 1 : Ram
+                                                                    Enter the role of the actor in the movie number 1 : Rama
+    Enter the movie id of movie number 2 : 999
+    Enter the role of the actor in the movie number 2 : Bheem
+
+    OBSERVATION : No errors in terminal 2. In terminal 1 we rollback transaction as mov_id : 999 does not exist in movie table
+
+---------------------------------------------TEST CASE 4-----------------------------------------------
+
+                TERMINAL 1                                                  TERMINAL 2
+    Enter the previously inserted actor_id : 125
+    Enter the number of movies: 2
+                                                                    Enter the previously inserted actor_id : 125
+								    Enter the number of movies: 1
+    Enter the movie id of movie number 1 : 921
+                                                                    Enter the movie id of movie number 1 : 919
+    Enter the role of the actor in the movie number 1 : Ram
+                                                                    Enter the role of the actor in the movie number 1 : Rama
+    Enter the movie id of movie number 2 : 919
+    Enter the role of the actor in the movie number 2 : Bheem
+
+    OBSERVATION : No errors in terminal 2. In terminal 1 we rollback transaction as an error occurs.
+    ERROR : psycopg2.errors.UniqueViolation: duplicate key value violates unique constraint "movie_cast_pkey"
+    DETAIL:  Key (mov_id, act_id)=(919, 125) already exists.
+
+---------------------------------------------TEST CASE 5-----------------------------------------------
+
+                TERMINAL 1                                                  TERMINAL 2
+    Enter the previously inserted actor_id : 125
+    Enter the number of movies: 2
+                                                                    Enter the previously inserted actor_id : 125
+								    Enter the number of movies: 2
+    Enter the movie id of movie number 1 : 921
+                                                                    Enter the movie id of movie number 1 : 921   
+    Enter the role of the actor in the movie number 1 : qwe
+                                                                    Enter the role of the actor in the movie number 1 : rty
+    Enter the movie id of movie number 2 : 919
+                                                                    Enter the movie id of movie number 2 : 905
+    Enter the role of the actor in the movie number 2 : asdf
+                                                                    Enter the role of the actor in the movie number 2 : zxcv
+
+    OBSERVATION : No errors in terminal 1. In terminal 2 we rollback transaction as an error occurs.
+    ERROR : psycopg2.errors.UniqueViolation: duplicate key value violates unique constraint "movie_cast_pkey"
+    DETAIL:  Key (mov_id, act_id)=(921, 125) already exists.
+
+-------------------------------------------------TEST CASE 6-----------------------------------------------
+
+                TERMINAL 1                                                  TERMINAL 2
+    Enter the previously inserted actor_id : 125
+    Enter the number of movies: 2
+                                                                    Enter the previously inserted actor_id : 125
+								    Enter the number of movies: 2
+    Enter the movie id of movie number 1 : 921
+                                                                    Enter the movie id of movie number 1 : 923 
+    Enter the role of the actor in the movie number 1 : qwe
+                                                                    Enter the role of the actor in the movie number 1 : rty
+    Enter the movie id of movie number 2 : 919
+                                                                    Enter the movie id of movie number 2 : 919                                                                
+    Enter the role of the actor in the movie number 2 : asdf
+                                                                     Enter the role of the actor in the movie number 2 : zxcv
+
+    OBSERVATION : No errors in terminal 1. In terminal 2 we rollback transaction as an error occurs
+    ERROR : psycopg2.errors.UniqueViolation: duplicate key value violates unique constraint "movie_cast_pkey"
+    DETAIL:  Key (mov_id, act_id)=(919, 125) already exists.
+
+-------------------------------------------------TEST CASE 7-----------------------------------------------
+
+                TERMINAL 1                                                  TERMINAL 2
+    Enter the previously inserted actor_id : 125
+    Enter the number of movies: 2
+                                                                    Enter the previously inserted actor_id : 125
+								    Enter the number of movies: 2
+    Enter the movie id of movie number 1 : 921
+                                                                    Enter the movie id of movie number 1 : 919
+    Enter the role of the actor in the movie number 1 : qwe
+                                                                    Enter the role of the actor in the movie number 1 : rty
+    Enter the movie id of movie number 2 : 919
+                                                                    Enter the movie id of movie number 2 : 905
+    Enter the role of the actor in the movie number 2 : asdf  
+                                                                    Enter the role of the actor in the movie number 2 : zxcv
+
+    OBSERVATION : No errors in terminal 2. In terminal 1 we rollback transaction as an error occurs
+    ERROR : psycopg2.errors.UniqueViolation: duplicate key value violates unique constraint "movie_cast_pkey"
+    DETAIL:  Key (mov_id, act_id)=(919, 125) already exists.
+    
+-------------------------------------------------TEST CASE 8-----------------------------------------------
+
+                TERMINAL 1                                                  TERMINAL 2
+    Enter the previously inserted actor_id : 125
+    Enter the number of movies: 3
+                                                                    Enter the previously inserted actor_id : 125
+								    Enter the number of movies: 3
+    Enter the movie id of movie number 1 : 919
+                                                                    Enter the movie id of movie number 1 : 919
+    Enter the role of the actor in the movie number 1 : qwe
+                                                                    Enter the role of the actor in the movie number 1 : asd
+    Enter the movie id of movie number 2 : 921
+                                                                    Enter the movie id of movie number 2 : 901
+    Enter the role of the actor in the movie number 2 : rty
+                                                                    Enter the role of the actor in the movie number 2 : fgh
+    Enter the movie id of movie number 3 : 923
+                                                                    Enter the movie id of movie number 3 : 905
+    Enter the role of the actor in the movie number 3 : uio
+                                                                    Enter the role of the actor in the movie number 3 : jkl
+
+    OBSERVATION : No errors in terminal 1. In terminal 2 we rollback transaction as an error occurs
+    ERROR : psycopg2.errors.UniqueViolation: duplicate key value violates unique constraint "movie_cast_pkey"
+    DETAIL:  Key (mov_id, act_id)=(919, 125) already exists.
+
+-------------------------------------------------TEST CASE 9-----------------------------------------------
+
+                TERMINAL 1                                                  TERMINAL 2
+    Enter the previously inserted actor_id : 125
+    Enter the number of movies: 3
+                                                                    Enter the previously inserted actor_id : 125
+								    Enter the number of movies: 3
+    Enter the movie id of movie number 1 : 921
+                                                                    Enter the movie id of movie number 1 : 919
+    Enter the role of the actor in the movie number 1 : qwe
+                                                                    Enter the role of the actor in the movie number 1 : asd
+    Enter the movie id of movie number 2 : 919
+                                                                    Enter the movie id of movie number 2 : 901
+    Enter the role of the actor in the movie number 2 : rty
+                                                                    Enter the role of the actor in the movie number 2 : fgh
+    Enter the movie id of movie number 3 : 923
+                                                                    Enter the movie id of movie number 3 : 905
+    Enter the role of the actor in the movie number 3 : uio
+                                                                    Enter the role of the actor in the movie number 3 : jkl
+
+    OBSERVATION : No errors in terminal 2. In terminal 1 we rollback transaction as an error occurs
+    ERROR : psycopg2.errors.UniqueViolation: duplicate key value violates unique constraint "movie_cast_pkey"
+    DETAIL:  Key (mov_id, act_id)=(919, 125) already exists.
+    
+-------------------------------------------------TEST CASE 10-----------------------------------------------
+
+                TERMINAL 1                                                  TERMINAL 2
+    Enter the previously inserted actor_id : 125
+    Enter the number of movies: 3
+                                                                    Enter the previously inserted actor_id : 125
+								    Enter the number of movies: 3
+    Enter the movie id of movie number 1 : 919
+                                                                    Enter the movie id of movie number 1 : 908
+    Enter the role of the actor in the movie number 1 : qwe
+                                                                    Enter the role of the actor in the movie number 1 : asd
+    Enter the movie id of movie number 2 : 921
+                                                                    Enter the movie id of movie number 2 : 921
+    Enter the role of the actor in the movie number 2 : rty
+                                                                    Enter the role of the actor in the movie number 2 : fgh
+    Enter the movie id of movie number 3 : 923
+                                                                    Enter the movie id of movie number 3 : 905
+    Enter the role of the actor in the movie number 3 : uio
+                                                                    Enter the role of the actor in the movie number 3 : jkl
+
+    OBSERVATION : No errors in terminal 1. In terminal 2 we rollback transaction as an error occurs
+    ERROR : psycopg2.errors.UniqueViolation: duplicate key value violates unique constraint "movie_cast_pkey"
+    DETAIL:  Key (mov_id, act_id)=(921, 125) already exists.
+-------------------------------------------------TEST CASE 11-----------------------------------------------
+
+                TERMINAL 1                                                  TERMINAL 2
+    Enter the previously inserted actor_id : 125
+    Enter the number of movies: 3
+                                                                    Enter the previously inserted actor_id : 125
+								    Enter the number of movies: 3
+    Enter the movie id of movie number 1 : 919
+                                                                    Enter the movie id of movie number 1 : 911
+    Enter the role of the actor in the movie number 1 : qwe
+                                                                    Enter the role of the actor in the movie number 1 : asd
+    Enter the movie id of movie number 2 : 921
+                                                                    Enter the movie id of movie number 2 : 923
+    Enter the role of the actor in the movie number 2 : rty
+                                                                    Enter the role of the actor in the movie number 2 : fgh
+    Enter the movie id of movie number 3 : 923
+                                                                    Enter the movie id of movie number 3 : 905
+    Enter the role of the actor in the movie number 3 : uio
+                                                                    Enter the role of the actor in the movie number 3 : jkl
+
+    OBSERVATION : No errors in terminal 2. In terminal 1 we rollback transaction as an error occurs
+    ERROR : psycopg2.errors.UniqueViolation: duplicate key value violates unique constraint "movie_cast_pkey"
+    DETAIL:  Key (mov_id, act_id)=(923, 125) already exists.
+-------------------------------------------------TEST CASE 12-----------------------------------------------
+
+                TERMINAL 1                                                  TERMINAL 2
+    Enter the previously inserted actor_id : 125
+    Enter the number of movies: 3
+                                                                    Enter the previously inserted actor_id : 125
+								    Enter the number of movies: 3
+    Enter the movie id of movie number 1 : 919
+                                                                    Enter the movie id of movie number 1 : 911
+    Enter the role of the actor in the movie number 1 : qwe
+                                                                    Enter the role of the actor in the movie number 1 : asd
+    Enter the movie id of movie number 2 : 921
+                                                                    Enter the movie id of movie number 2 : 901
+    Enter the role of the actor in the movie number 2 : rty
+                                                                    Enter the role of the actor in the movie number 2 : fgh
+    Enter the movie id of movie number 3 : 923
+                                                                    Enter the movie id of movie number 3 : 923
+    Enter the role of the actor in the movie number 3 : uio
+                                                                    Enter the role of the actor in the movie number 3 : jkl
+
+    OBSERVATION : No errors in terminal 1. In terminal 2 we rollback transaction as an error occurs
+    ERROR : psycopg2.errors.UniqueViolation: duplicate key value violates unique constraint "movie_cast_pkey"
+    DETAIL:  Key (mov_id, act_id)=(923, 125) already exists.

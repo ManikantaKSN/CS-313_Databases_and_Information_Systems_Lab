@@ -1,5 +1,4 @@
 import psycopg2
-
 conn = psycopg2.connect(database='moviedb',
                         host="localhost",
                         user="postgres",
@@ -8,10 +7,7 @@ conn = psycopg2.connect(database='moviedb',
 mycursor = conn.cursor()
 
 try:
-    command = """
-    ALTER TABLE movie_cast
-    ADD PRIMARY KEY (mov_id, act_id);
-    """
+    command = "ALTER TABLE movie_cast ADD PRIMARY KEY (mov_id, act_id)"
     mycursor.execute(command)
     conn.commit()
     print("Primary key declared for table 'movie_cast'")
