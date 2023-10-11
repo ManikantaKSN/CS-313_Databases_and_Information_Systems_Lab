@@ -1,0 +1,38 @@
+EXERCISES
+---------
+
+1. MATCH (n:Movie) RETURN n
+
+2. MATCH (n:Movie) RETURN n.title, n.released, n.tagline
+
+3. MATCH (p:Person) RETURN p.name AS Name, p.born AS Year_Of_Birth
+
+4. MATCH (p:Person)-[r]->(m:Movie {title:"The Matrix"}) RETURN p.name AS Name
+
+5. MATCH (p:Person)-[r]->(m:Movie {title:"The Matrix"}) RETURN p.name AS Name, type(r) AS relationship
+
+6. MATCH (m:Movie {released:2000}) RETURN m.title
+
+7. MATCH (p:Person)-[r:ACTED_IN]->(m:Movie) WHERE p.name ENDS WITH "Thompson" RETURN p.name, m.title, r.roles
+
+8. MATCH (p:Person)-[r:ACTED_IN]->(m:Movie) WHERE m.title IN r.roles RETURN m.title, p.name, r.roles
+
+9. MATCH (p:Person {name:"Tom Hanks"})-[a:ACTED_IN]->(m:Movie), (q:Person)-[:DIRECTED]->(m), (r:Person)-[:ACTED_IN]->(m) RETURN q.name AS Director, r.name AS Actors, m.title AS Movie ORDER BY q.name, r.name
+
+10. MATCH (p:Person)-[r:REVIEWED]->(m:Movie) RETURN m.title AS Title, p.name AS Reviewer, r.summary AS Summary, r.rating AS Rating
+
+11. MATCH (p:Person)-[:DIRECTED]->(m:Movie) WITH p.name AS Name, collect(m.title) AS Movies RETURN Name, Movies
+
+12. MATCH (p:Person{name:"Tom Cruise"})-[:ACTED_IN]->(m:Movie)<-[:ACTED_IN]-(q:Person) WITH collect(q.name) AS co_stars, m.title AS title RETURN title, co_stars
+
+13. MATCH (p1:Person)-[:DIRECTED]->(m:Movie)<-[:ACTED_IN]-(p2:Person) WITH p1.name AS Director, COUNT(DISTINCT p2.name) AS People, collect(DISTINCT p2.name) AS Actors RETURN Director, People, Actors
+
+14. MATCH (p1:Person)-[:DIRECTED]->(m:Movie) OPTIONAL MATCH (p2:Person)-[:REVIEWED]->(m) WITH collect(p1.name) AS Directors, p2.name AS Reviewers, m.title AS Title WHERE size(Directors) >=2 RETURN Title, Reviewers
+
+15. MATCH (p:Person)-[:ACTED_IN]->(m:Movie) WHERE m.released >= 1990 AND m.released <= 1999 WITH m.title AS Movie,m.released AS Released_Date, collect(p.name) AS Actors RETURN Released_Date, Movie, Actors
+
+16. MATCH(p:Person)-[:ACTED_IN]->(m:Movie) WITH m.released as Release, COLLECT(distinct m.title) as Movie_list, COLLECT(distinct p.name) as Actors WHERE Release>=1990 AND Release<=1999 RETURN Release, Movie_list, Actors
+
+17. MATCH(p:Person)-[:ACTED_IN]->(m:Movie) WITH m.released as Release, COLLECT(distinct m.title) as Movie_list, COLLECT(distinct p.name) as Actors WHERE Release>=1990 AND Release<=1999 RETURN Release, Movie_list, Actors ORDER BY Release DESC
+
+18. MATCH (p:Person)-[:ACTED_IN]->(m:Movie) WITH p.name AS Actors, collect(m.title) AS Movies WHERE size(Movies) >=5 RETURN Actors, Movies

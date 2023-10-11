@@ -1,0 +1,29 @@
+BASIC RETRIEVAL
+
+1. CALL db.schema.visualization
+2. CALL db.propertyKeys()
+3. MATCH (n) RETURN n
+4. MATCH (n: Person) RETURN n
+5. MATCH (n:Movie {released:2003}) RETURN n 
+6. MATCH (n:Movie {released:2003}) RETURN n.title, n.tagline
+7. MATCH (n:Movie {released:2003}) RETURN n.title AS Movie_Title, n.released AS Released_Year, n.tagline AS Tagline
+8. MATCH (p:Person)-[WROTE]->(n:Movie {title:"Speed Racer"}) RETURN p
+9. MATCH (p:Person {name:"Tom Hanks"})-[]->(n:Movie) RETURN p, n
+10. MATCH (p:Person {name:"Tom Hanks"})-[r]->(n:Movie) RETURN p.name, type(r), n.title
+11. MATCH (p:Person {name:"Tom Hanks"})-[r]->(n:Movie) RETURN r.roles AS ACTED_AS, n.title AS IN
+12. MATCH (p:Person)-[r:ACTED_IN]->(n:Movie {title:"The Matrix"}) RETURN p.name AS ACTOR, r.roles AS ACTED_AS, n.title AS IN_MOVIE
+
+WHERE
+
+1. MATCH (p:Person)-[r:ACTED_IN]->(m:Movie) WHERE p.name = "Tom Cruise" RETURN p.name, r.roles, m.title
+2. MATCH (p:Person) WHERE p.born >= 1970 and p.born < 1980 RETURN p.name, p.born
+3. MATCH (p:Person)-[r:ACTED_IN]->(m:Movie{title:"The Matrix"}) WHERE p.born >1960 RETURN p.name, r.roles, m.title
+4. MATCH (p:Person)-[r:WROTE]->(m:Movie) RETURN p.name, m.title
+5. MATCH (p:Person) WHERE p.born is null RETURN p
+6. MATCH (p:Person)-[r:REVIEWED]->(m:Movie) RETURN m.title AS Title, p.name AS reviewer,  r.rating AS rating
+7. MATCH (p:Person) WHERE p.name starts with "James" RETURN p
+8. MATCH (p:Person)-[r:REVIEWED]->(m:Movie) WHERE r.summary contains "fun" RETURN p.name, m.title, r.summary, r.rating
+9. MATCH (p:Person)-[r:PRODUCED]->(m:Movie) WHERE NOT EXISTS ((p)-[:DIRECTED]->(:Movie))  RETURN p.name, m.title
+10. MATCH (p:Person)-[:DIRECTED]->(m:Movie)<-[:ACTED_IN]-(q:Person) WHERE EXISTS ((p)-[:ACTED_IN]->(m)) RETURN m.title, p.name, q.name
+11. MATCH (m:Movie) WHERE m.released IN [2000, 2002, 2003] RETURN m
+
