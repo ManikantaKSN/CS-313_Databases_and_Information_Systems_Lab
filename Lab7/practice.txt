@@ -1,0 +1,656 @@
+> echo "Hello"
+"Hello"
+> set client1 Alice
+OK
+> get client1
+"Alice"
+> del client1
+(integer) 1
+> del clie
+(integer) 0
+> redis-server
+(error) I'm sorry, I don't recognize that command. Please type HELP for one of these commands: DECR, DECRBY, DEL, EXISTS, EXPIRE, GET, GETSET, HDEL, HEXISTS, HGET, HGETALL, HINCRBY, HKEYS, HLEN, HMGET, HMSET, HSET, HVALS, INCR, INCRBY, KEYS, LINDEX, LLEN, LPOP, LPUSH, LRANGE, LREM, LSET, LTRIM, MGET, MSET, MSETNX, MULTI, PEXPIRE, RENAME, RENAMENX, RPOP, RPOPLPUSH, RPUSH, SADD, SCARD, SDIFF, SDIFFSTORE, SET, SETEX, SETNX, SINTER, SINTERSTORE, SISMEMBER, SMEMBERS, SMOVE, SORT, SPOP, SRANDMEMBER, SREM, SUNION, SUNIONSTORE, TTL, TYPE, ZADD, ZCARD, ZCOUNT, ZINCRBY, ZRANGE, ZRANGEBYSCORE, ZRANK, ZREM, ZREMRANGEBYSCORE, ZREVRANGE, ZSCORE
+> redis-cli
+(error) I'm sorry, I don't recognize that command. Please type HELP for one of these commands: DECR, DECRBY, DEL, EXISTS, EXPIRE, GET, GETSET, HDEL, HEXISTS, HGET, HGETALL, HINCRBY, HKEYS, HLEN, HMGET, HMSET, HSET, HVALS, INCR, INCRBY, KEYS, LINDEX, LLEN, LPOP, LPUSH, LRANGE, LREM, LSET, LTRIM, MGET, MSET, MSETNX, MULTI, PEXPIRE, RENAME, RENAMENX, RPOP, RPOPLPUSH, RPUSH, SADD, SCARD, SDIFF, SDIFFSTORE, SET, SETEX, SETNX, SINTER, SINTERSTORE, SISMEMBER, SMEMBERS, SMOVE, SORT, SPOP, SRANDMEMBER, SREM, SUNION, SUNIONSTORE, TTL, TYPE, ZADD, ZCARD, ZCOUNT, ZINCRBY, ZRANGE, ZRANGEBYSCORE, ZRANK, ZREM, ZREMRANGEBYSCORE, ZREVRANGE, ZSCORE
+> ping
+PONG
+> set client1 Boy
+OK
+> get client1
+"Boy"
+> set client1 Boyy
+OK
+> get client1
+"Boyy"
+> get client11
+(nil)
+> del client1
+(integer) 1
+> del client11
+(integer) 0
+> set client:1:name Alice
+OK
+> set client:1:level 1
+OK
+> get client:1:level 1
+(error) wrong number of arguments (given 2, expected 1)
+> get client:1:level
+"1"
+> incr client:1:level
+(integer) 2
+> incr client:1:level
+(integer) 3
+> get client:1:level
+"3"
+> decr client:1:level
+(integer) 2
+> get client:1:level
+"2"
+> incr client:1:name
+(error) ERR value is not an integer or out of range
+> incr client:1
+(integer) 1
+> get client:1
+"1"
+> exists client:1:name
+(integer) 1
+> exists client:1:na
+(integer) 0
+> set client:1:name Alice
+OK
+> set message "Hello world"
+OK
+> expire message 50
+(integer) 1
+> ttl message
+(integer) 43
+> ttl message
+(integer) 40
+> ttl message
+(integer) 31
+> ttl message
+(integer) 12
+> ttl msg
+(integer) -2
+> ttl message
+(integer) -2
+> ttl client:1:name
+(integer) -1
+> setex message 50 Hello
+OK
+> ttl message
+(integer) 45
+> get message
+"Hello"
+> ttl message
+(integer) -2
+> setex message 100 Hello
+OK
+> ttl message
+(integer) 98
+> persist message
+(integer) 1
+> ttl message
+(integer) -1
+> persist tetrur
+(integer) 0
+> ttl tetrur
+(integer) -2
+> persist client:1:name
+(integer) 0
+> persist client:1:name
+(integer) 0
+> ttl client:1:name
+(integer) -1
+
+
+
+
+> mset server:1:name Apache server:1:port 8000
+OK
+> append server:1:name " Lite"
+11
+> get server:1:name
+"Apache Lite"
+> rename server:1:name server:1:identifier
+OK
+> get server:1:name
+(nil)
+> get server:1:identifier
+"Apache Lite"
+> flushall
+(error) I'm sorry, I don't recognize that command. Please type HELP for one of these commands: DECR, DECRBY, DEL, EXISTS, EXPIRE, GET, GETSET, HDEL, HEXISTS, HGET, HGETALL, HINCRBY, HKEYS, HLEN, HMGET, HMSET, HSET, HVALS, INCR, INCRBY, KEYS, LINDEX, LLEN, LPOP, LPUSH, LRANGE, LREM, LSET, LTRIM, MGET, MSET, MSETNX, MULTI, PEXPIRE, RENAME, RENAMENX, RPOP, RPOPLPUSH, RPUSH, SADD, SCARD, SDIFF, SDIFFSTORE, SET, SETEX, SETNX, SINTER, SINTERSTORE, SISMEMBER, SMEMBERS, SMOVE, SORT, SPOP, SRANDMEMBER, SREM, SUNION, SUNIONSTORE, TTL, TYPE, ZADD, ZCARD, ZCOUNT, ZINCRBY, ZRANGE, ZRANGEBYSCORE, ZRANK, ZREM, ZREMRANGEBYSCORE, ZREVRANGE, ZSCORE
+
+
+
+
+
+> rpush customers alice bob charles
+(integer) 3
+> lrange customers 0 2
+1) "alice"
+2) "bob"
+3) "charles"
+> lrange customers 0 1
+1) "alice"
+2) "bob"
+> lrange customers 0
+(error) wrong number of arguments (given 2, expected 3)
+> lrange customers 0 0
+1) "alice"
+> lrange customers 1 1
+1) "bob"
+> lrange customers 2 2
+1) "charles"
+> lrange customers 4 5
+(empty list or set)
+> lrange customers 0 6
+1) "alice"
+2) "bob"
+3) "charles"
+> lrange customers 0 -1
+1) "alice"
+2) "bob"
+3) "charles"
+> lrange customers 0 -2
+1) "alice"
+2) "bob"
+> lrange customers 0 -3
+1) "alice"
+> linsert customer after "Bob" "Harry"
+0
+> linsert customers after "Bob" "Harry"
+-1
+> lrange customers 0 -1
+1) "alice"
+2) "bob"
+3) "charles"
+> linsert customer after "bob" "harry"
+0
+> linsert customers after "bob" "harry"
+4
+> linsert customers before "bob" "barry"
+5
+> lrange customers 0 -1
+1) "alice"
+2) "barry"
+3) "bob"
+4) "harry"
+5) "charles"
+> llen customers
+(integer) 5
+> llen server:1:name
+(integer) 0
+> llen server:1:identifier
+(error) WRONGTYPE Operation against a key holding the wrong kind of value
+> llen server:1:port
+(error) WRONGTYPE Operation against a key holding the wrong kind of value
+> rpop customers
+"charles"
+> lpop customers
+"alice"
+> lrange customers 0 -1
+1) "barry"
+2) "bob"
+3) "harry"
+
+
+
+
+> sadd courses cs maths physics
+(integer) 3
+> smembers
+(error) wrong number of arguments (given 0, expected 1)
+> smembers courses
+1) "maths"
+2) "cs"
+3) "physics"
+> smembers courses
+1) "maths"
+2) "cs"
+3) "physics"
+> sadd courses maths
+(integer) 0
+> smembers courses
+1) "maths"
+2) "cs"
+3) "physics"
+> sadd courses chemistry
+(integer) 1
+> smembers courses
+1) "chemistry"
+2) "maths"
+3) "cs"
+4) "physics"
+> smembers courses
+1) "chemistry"
+2) "maths"
+3) "cs"
+4) "physics"
+> scard courses
+4
+> scard customers
+(error) WRONGTYPE Operation against a key holding the wrong kind of value
+> scard courses
+4
+> clear //in redis-cli ubuntu to clear
+(error) I'm sorry, I don't recognize that command. Please type HELP for one of these commands: DECR, DECRBY, DEL, EXISTS, EXPIRE, GET, GETSET, HDEL, HEXISTS, HGET, HGETALL, HINCRBY, HKEYS, HLEN, HMGET, HMSET, HSET, HVALS, INCR, INCRBY, KEYS, LINDEX, LLEN, LPOP, LPUSH, LRANGE, LREM, LSET, LTRIM, MGET, MSET, MSETNX, MULTI, PEXPIRE, RENAME, RENAMENX, RPOP, RPOPLPUSH, RPUSH, SADD, SCARD, SDIFF, SDIFFSTORE, SET, SETEX, SETNX, SINTER, SINTERSTORE, SISMEMBER, SMEMBERS, SMOVE, SORT, SPOP, SRANDMEMBER, SREM, SUNION, SUNIONSTORE, TTL, TYPE, ZADD, ZCARD, ZCOUNT, ZINCRBY, ZRANGE, ZRANGEBYSCORE, ZRANK, ZREM, ZREMRANGEBYSCORE, ZREVRANGE, ZSCORE
+> sismember courses maths
+(integer) 1
+> sismember courses ma
+(integer) 0
+> smove courses basic physics
+(integer) 1
+> //new key basic created
+(error) I'm sorry, I don't recognize that command. Please type HELP for one of these commands: DECR, DECRBY, DEL, EXISTS, EXPIRE, GET, GETSET, HDEL, HEXISTS, HGET, HGETALL, HINCRBY, HKEYS, HLEN, HMGET, HMSET, HSET, HVALS, INCR, INCRBY, KEYS, LINDEX, LLEN, LPOP, LPUSH, LRANGE, LREM, LSET, LTRIM, MGET, MSET, MSETNX, MULTI, PEXPIRE, RENAME, RENAMENX, RPOP, RPOPLPUSH, RPUSH, SADD, SCARD, SDIFF, SDIFFSTORE, SET, SETEX, SETNX, SINTER, SINTERSTORE, SISMEMBER, SMEMBERS, SMOVE, SORT, SPOP, SRANDMEMBER, SREM, SUNION, SUNIONSTORE, TTL, TYPE, ZADD, ZCARD, ZCOUNT, ZINCRBY, ZRANGE, ZRANGEBYSCORE, ZRANK, ZREM, ZREMRANGEBYSCORE, ZREVRANGE, ZSCORE
+> smembers basic
+1) "physics"
+> smembers courses
+1) "chemistry"
+2) "maths"
+3) "cs"
+> srem courses cs
+1
+> smembers courses
+1) "chemistry"
+2) "maths"
+
+
+
+> zadd clients 3500 Harry 3300 Alice 3500 Charles 3400 Robert
+(integer) 4
+> zrange 0 -1
+(error) ERR value is not an integer or out of range
+> zrange clients 0 -1
+1) "Alice"
+2) "Robert"
+3) "Charles"
+4) "Harry"
+> zrand clients Robert
+(error) I'm sorry, I don't recognize that command. Please type HELP for one of these commands: DECR, DECRBY, DEL, EXISTS, EXPIRE, GET, GETSET, HDEL, HEXISTS, HGET, HGETALL, HINCRBY, HKEYS, HLEN, HMGET, HMSET, HSET, HVALS, INCR, INCRBY, KEYS, LINDEX, LLEN, LPOP, LPUSH, LRANGE, LREM, LSET, LTRIM, MGET, MSET, MSETNX, MULTI, PEXPIRE, RENAME, RENAMENX, RPOP, RPOPLPUSH, RPUSH, SADD, SCARD, SDIFF, SDIFFSTORE, SET, SETEX, SETNX, SINTER, SINTERSTORE, SISMEMBER, SMEMBERS, SMOVE, SORT, SPOP, SRANDMEMBER, SREM, SUNION, SUNIONSTORE, TTL, TYPE, ZADD, ZCARD, ZCOUNT, ZINCRBY, ZRANGE, ZRANGEBYSCORE, ZRANK, ZREM, ZREMRANGEBYSCORE, ZREVRANGE, ZSCORE
+> zrank clients Robert
+1
+> zrank clients Alice
+0
+> zrank clients Harry
+3
+> zincrby clients 500 Robert
+3900.0
+> zrange clients 0 -1
+1) "Alice"
+2) "Charles"
+3) "Harry"
+4) "Robert"
+> zincrby clients -100 Robert
+3800.0
+> zadd clients 4500 Suri
+(integer) 1
+> zrange clients 0 -1
+1) "Alice"
+2) "Charles"
+3) "Harry"
+4) "Robert"
+5) "Suri"
+
+
+> hset customer:1 name alice income 3200
+2
+> hget customer:1 name
+"alice"
+> hget customer:1 income
+"3200"
+> hgetall customer:1
+1) "name"
+2) "alice"
+3) "income"
+4) "3200"
+> hkeys customer:1
+1) "name"
+2) "income"
+> hvals customer:1
+1) "alice"
+2) "3200"
+> hget customer:1 address
+(nil)
+> hget customer:2 name
+(nil)
+> hlen customer:1
+2
+> hincrby key customer:1 income 400
+(error) wrong number of arguments (given 4, expected 3)
+> hincrby customer:1 income 400
+(integer) 3600
+> hdel customer:1 name
+(integer) 1
+> hlen customer:1
+1
+> hget customer:1 name
+(nil)
+> save
+> quit
+
+
+
+
+
+> echo "Hello"
+"Hello"
+> set client1 Alice
+OK
+> get client1
+"Alice"
+> del client1
+(integer) 1
+> del clie
+(integer) 0
+> redis-server
+(error) I'm sorry, I don't recognize that command. Please type HELP for one of these commands: DECR, DECRBY, DEL, EXISTS, EXPIRE, GET, GETSET, HDEL, HEXISTS, HGET, HGETALL, HINCRBY, HKEYS, HLEN, HMGET, HMSET, HSET, HVALS, INCR, INCRBY, KEYS, LINDEX, LLEN, LPOP, LPUSH, LRANGE, LREM, LSET, LTRIM, MGET, MSET, MSETNX, MULTI, PEXPIRE, RENAME, RENAMENX, RPOP, RPOPLPUSH, RPUSH, SADD, SCARD, SDIFF, SDIFFSTORE, SET, SETEX, SETNX, SINTER, SINTERSTORE, SISMEMBER, SMEMBERS, SMOVE, SORT, SPOP, SRANDMEMBER, SREM, SUNION, SUNIONSTORE, TTL, TYPE, ZADD, ZCARD, ZCOUNT, ZINCRBY, ZRANGE, ZRANGEBYSCORE, ZRANK, ZREM, ZREMRANGEBYSCORE, ZREVRANGE, ZSCORE
+> redis-cli
+(error) I'm sorry, I don't recognize that command. Please type HELP for one of these commands: DECR, DECRBY, DEL, EXISTS, EXPIRE, GET, GETSET, HDEL, HEXISTS, HGET, HGETALL, HINCRBY, HKEYS, HLEN, HMGET, HMSET, HSET, HVALS, INCR, INCRBY, KEYS, LINDEX, LLEN, LPOP, LPUSH, LRANGE, LREM, LSET, LTRIM, MGET, MSET, MSETNX, MULTI, PEXPIRE, RENAME, RENAMENX, RPOP, RPOPLPUSH, RPUSH, SADD, SCARD, SDIFF, SDIFFSTORE, SET, SETEX, SETNX, SINTER, SINTERSTORE, SISMEMBER, SMEMBERS, SMOVE, SORT, SPOP, SRANDMEMBER, SREM, SUNION, SUNIONSTORE, TTL, TYPE, ZADD, ZCARD, ZCOUNT, ZINCRBY, ZRANGE, ZRANGEBYSCORE, ZRANK, ZREM, ZREMRANGEBYSCORE, ZREVRANGE, ZSCORE
+> ping
+PONG
+> set client1 Boy
+OK
+> get client1
+"Boy"
+> set client1 Boyy
+OK
+> get client1
+"Boyy"
+> get client11
+(nil)
+> del client1
+(integer) 1
+> del client11
+(integer) 0
+> set client:1:name Alice
+OK
+> set client:1:level 1
+OK
+> get client:1:level 1
+(error) wrong number of arguments (given 2, expected 1)
+> get client:1:level
+"1"
+> incr client:1:level
+(integer) 2
+> incr client:1:level
+(integer) 3
+> get client:1:level
+"3"
+> decr client:1:level
+(integer) 2
+> get client:1:level
+"2"
+> incr client:1:name
+(error) ERR value is not an integer or out of range
+> incr client:1
+(integer) 1
+> get client:1
+"1"
+> exists client:1:name
+(integer) 1
+> exists client:1:na
+(integer) 0
+> set client:1:name Alice
+OK
+> set message "Hello world"
+OK
+> expire message 50
+(integer) 1
+> ttl message
+(integer) 43
+> ttl message
+(integer) 40
+> ttl message
+(integer) 31
+> ttl message
+(integer) 12
+> ttl msg
+(integer) -2
+> ttl message
+(integer) -2
+> ttl client:1:name
+(integer) -1
+> setex message 50 Hello
+OK
+> ttl message
+(integer) 45
+> get message
+"Hello"
+> ttl message
+(integer) -2
+> setex message 100 Hello
+OK
+> ttl message
+(integer) 98
+> persist message
+(integer) 1
+> ttl message
+(integer) -1
+> persist tetrur
+(integer) 0
+> ttl tetrur
+(integer) -2
+> persist client:1:name
+(integer) 0
+> persist client:1:name
+(integer) 0
+> ttl client:1:name
+(integer) -1
+> clear
+(error) I'm sorry, I don't recognize that command. Please type HELP for one of these commands: DECR, DECRBY, DEL, EXISTS, EXPIRE, GET, GETSET, HDEL, HEXISTS, HGET, HGETALL, HINCRBY, HKEYS, HLEN, HMGET, HMSET, HSET, HVALS, INCR, INCRBY, KEYS, LINDEX, LLEN, LPOP, LPUSH, LRANGE, LREM, LSET, LTRIM, MGET, MSET, MSETNX, MULTI, PEXPIRE, RENAME, RENAMENX, RPOP, RPOPLPUSH, RPUSH, SADD, SCARD, SDIFF, SDIFFSTORE, SET, SETEX, SETNX, SINTER, SINTERSTORE, SISMEMBER, SMEMBERS, SMOVE, SORT, SPOP, SRANDMEMBER, SREM, SUNION, SUNIONSTORE, TTL, TYPE, ZADD, ZCARD, ZCOUNT, ZINCRBY, ZRANGE, ZRANGEBYSCORE, ZRANK, ZREM, ZREMRANGEBYSCORE, ZREVRANGE, ZSCORE
+> clr
+(error) I'm sorry, I don't recognize that command. Please type HELP for one of these commands: DECR, DECRBY, DEL, EXISTS, EXPIRE, GET, GETSET, HDEL, HEXISTS, HGET, HGETALL, HINCRBY, HKEYS, HLEN, HMGET, HMSET, HSET, HVALS, INCR, INCRBY, KEYS, LINDEX, LLEN, LPOP, LPUSH, LRANGE, LREM, LSET, LTRIM, MGET, MSET, MSETNX, MULTI, PEXPIRE, RENAME, RENAMENX, RPOP, RPOPLPUSH, RPUSH, SADD, SCARD, SDIFF, SDIFFSTORE, SET, SETEX, SETNX, SINTER, SINTERSTORE, SISMEMBER, SMEMBERS, SMOVE, SORT, SPOP, SRANDMEMBER, SREM, SUNION, SUNIONSTORE, TTL, TYPE, ZADD, ZCARD, ZCOUNT, ZINCRBY, ZRANGE, ZRANGEBYSCORE, ZRANK, ZREM, ZREMRANGEBYSCORE, ZREVRANGE, ZSCORE
+> mset server:1:name Apache server:1:port 8000
+OK
+> append server:1:name " Lite"
+11
+> get server:1:name
+"Apache Lite"
+> rename server:1:name server:1:identifier
+OK
+> get server:1:name
+(nil)
+> get server:1:identifier
+"Apache Lite"
+> flushall
+(error) I'm sorry, I don't recognize that command. Please type HELP for one of these commands: DECR, DECRBY, DEL, EXISTS, EXPIRE, GET, GETSET, HDEL, HEXISTS, HGET, HGETALL, HINCRBY, HKEYS, HLEN, HMGET, HMSET, HSET, HVALS, INCR, INCRBY, KEYS, LINDEX, LLEN, LPOP, LPUSH, LRANGE, LREM, LSET, LTRIM, MGET, MSET, MSETNX, MULTI, PEXPIRE, RENAME, RENAMENX, RPOP, RPOPLPUSH, RPUSH, SADD, SCARD, SDIFF, SDIFFSTORE, SET, SETEX, SETNX, SINTER, SINTERSTORE, SISMEMBER, SMEMBERS, SMOVE, SORT, SPOP, SRANDMEMBER, SREM, SUNION, SUNIONSTORE, TTL, TYPE, ZADD, ZCARD, ZCOUNT, ZINCRBY, ZRANGE, ZRANGEBYSCORE, ZRANK, ZREM, ZREMRANGEBYSCORE, ZREVRANGE, ZSCORE
+> rpush customers alice bob charles
+(integer) 3
+> lrange customers 0 2
+1) "alice"
+2) "bob"
+3) "charles"
+> lrange customers 0 1
+1) "alice"
+2) "bob"
+> lrange customers 0
+(error) wrong number of arguments (given 2, expected 3)
+> lrange customers 0 0
+1) "alice"
+> lrange customers 1 1
+1) "bob"
+> lrange customers 2 2
+1) "charles"
+> lrange customers 4 5
+(empty list or set)
+> lrange customers 0 6
+1) "alice"
+2) "bob"
+3) "charles"
+> lrange customers 0 -1
+1) "alice"
+2) "bob"
+3) "charles"
+> lrange customers 0 -2
+1) "alice"
+2) "bob"
+> lrange customers 0 -3
+1) "alice"
+> linsert customer after "Bob" "Harry"
+0
+> linsert customers after "Bob" "Harry"
+-1
+> lrange customers 0 -1
+1) "alice"
+2) "bob"
+3) "charles"
+> linsert customer after "bob" "harry"
+0
+> linsert customers after "bob" "harry"
+4
+> linsert customers before "bob" "barry"
+5
+> lrange customers 0 -1
+1) "alice"
+2) "barry"
+3) "bob"
+4) "harry"
+5) "charles"
+> llen customers
+(integer) 5
+> llen server:1:name
+(integer) 0
+> llen server:1:identifier
+(error) WRONGTYPE Operation against a key holding the wrong kind of value
+> llen server:1:port
+(error) WRONGTYPE Operation against a key holding the wrong kind of value
+> rpop customers
+"charles"
+> lpop customers
+"alice"
+> lrange customers 0 -1
+1) "barry"
+2) "bob"
+3) "harry"
+> sadd courses cs maths physics
+(integer) 3
+> smembers
+(error) wrong number of arguments (given 0, expected 1)
+> smembers courses
+1) "maths"
+2) "cs"
+3) "physics"
+> smembers courses
+1) "maths"
+2) "cs"
+3) "physics"
+> sadd courses maths
+(integer) 0
+> smembers courses
+1) "maths"
+2) "cs"
+3) "physics"
+> sadd courses chemistry
+(integer) 1
+> smembers courses
+1) "chemistry"
+2) "maths"
+3) "cs"
+4) "physics"
+> smembers courses
+1) "chemistry"
+2) "maths"
+3) "cs"
+4) "physics"
+> scard courses
+4
+> scard customers
+(error) WRONGTYPE Operation against a key holding the wrong kind of value
+> scard courses
+4
+> clear //in redis-cli ubuntu to clear
+(error) I'm sorry, I don't recognize that command. Please type HELP for one of these commands: DECR, DECRBY, DEL, EXISTS, EXPIRE, GET, GETSET, HDEL, HEXISTS, HGET, HGETALL, HINCRBY, HKEYS, HLEN, HMGET, HMSET, HSET, HVALS, INCR, INCRBY, KEYS, LINDEX, LLEN, LPOP, LPUSH, LRANGE, LREM, LSET, LTRIM, MGET, MSET, MSETNX, MULTI, PEXPIRE, RENAME, RENAMENX, RPOP, RPOPLPUSH, RPUSH, SADD, SCARD, SDIFF, SDIFFSTORE, SET, SETEX, SETNX, SINTER, SINTERSTORE, SISMEMBER, SMEMBERS, SMOVE, SORT, SPOP, SRANDMEMBER, SREM, SUNION, SUNIONSTORE, TTL, TYPE, ZADD, ZCARD, ZCOUNT, ZINCRBY, ZRANGE, ZRANGEBYSCORE, ZRANK, ZREM, ZREMRANGEBYSCORE, ZREVRANGE, ZSCORE
+> sismember courses maths
+(integer) 1
+> sismember courses ma
+(integer) 0
+> smove courses basic physics
+(integer) 1
+> //new key basic created
+(error) I'm sorry, I don't recognize that command. Please type HELP for one of these commands: DECR, DECRBY, DEL, EXISTS, EXPIRE, GET, GETSET, HDEL, HEXISTS, HGET, HGETALL, HINCRBY, HKEYS, HLEN, HMGET, HMSET, HSET, HVALS, INCR, INCRBY, KEYS, LINDEX, LLEN, LPOP, LPUSH, LRANGE, LREM, LSET, LTRIM, MGET, MSET, MSETNX, MULTI, PEXPIRE, RENAME, RENAMENX, RPOP, RPOPLPUSH, RPUSH, SADD, SCARD, SDIFF, SDIFFSTORE, SET, SETEX, SETNX, SINTER, SINTERSTORE, SISMEMBER, SMEMBERS, SMOVE, SORT, SPOP, SRANDMEMBER, SREM, SUNION, SUNIONSTORE, TTL, TYPE, ZADD, ZCARD, ZCOUNT, ZINCRBY, ZRANGE, ZRANGEBYSCORE, ZRANK, ZREM, ZREMRANGEBYSCORE, ZREVRANGE, ZSCORE
+> smembers basic
+1) "physics"
+> smembers courses
+1) "chemistry"
+2) "maths"
+3) "cs"
+> srem courses cs
+1
+> smembers courses
+1) "chemistry"
+2) "maths"
+> zadd clients 3500 Harry 3300 Alice 3500 Charles 3400 Robert
+(integer) 4
+> zrange 0 -1
+(error) ERR value is not an integer or out of range
+> zrange clients 0 -1
+1) "Alice"
+2) "Robert"
+3) "Charles"
+4) "Harry"
+> zrand clients Robert
+(error) I'm sorry, I don't recognize that command. Please type HELP for one of these commands: DECR, DECRBY, DEL, EXISTS, EXPIRE, GET, GETSET, HDEL, HEXISTS, HGET, HGETALL, HINCRBY, HKEYS, HLEN, HMGET, HMSET, HSET, HVALS, INCR, INCRBY, KEYS, LINDEX, LLEN, LPOP, LPUSH, LRANGE, LREM, LSET, LTRIM, MGET, MSET, MSETNX, MULTI, PEXPIRE, RENAME, RENAMENX, RPOP, RPOPLPUSH, RPUSH, SADD, SCARD, SDIFF, SDIFFSTORE, SET, SETEX, SETNX, SINTER, SINTERSTORE, SISMEMBER, SMEMBERS, SMOVE, SORT, SPOP, SRANDMEMBER, SREM, SUNION, SUNIONSTORE, TTL, TYPE, ZADD, ZCARD, ZCOUNT, ZINCRBY, ZRANGE, ZRANGEBYSCORE, ZRANK, ZREM, ZREMRANGEBYSCORE, ZREVRANGE, ZSCORE
+> zrank clients Robert
+1
+> zrank clients Alice
+0
+> zrank clients Harry
+3
+> zincrby clients 500 Robert
+3900.0
+> zrange clients 0 -1
+1) "Alice"
+2) "Charles"
+3) "Harry"
+4) "Robert"
+> zincrby clients -100 Robert
+3800.0
+> zadd clients 4500 Suri
+(integer) 1
+> zrange clients 0 -1
+1) "Alice"
+2) "Charles"
+3) "Harry"
+4) "Robert"
+5) "Suri"
+> hset customer:1 name alice income 3200
+2
+> hget customer:1 name
+"alice"
+> hget customer:1 income
+"3200"
+> hgetall customer:1
+1) "name"
+2) "alice"
+3) "income"
+4) "3200"
+> hkeys customer:1
+1) "name"
+2) "income"
+> hvals customer:1
+1) "alice"
+2) "3200"
+> hget customer:1 address
+(nil)
+> hget customer:2 name
+(nil)
+> hlen customer:1
+2
+> hincrby key customer:1 income 400
+(error) wrong number of arguments (given 4, expected 3)
+> hincrby customer:1 income 400
+(integer) 3600
+> hdel customer:1 name
+(integer) 1
+> hlen customer:1
+1
+> hget customer:1 name
+(nil)
+> save
+(error) I'm sorry, I don't recognize that command. Please type HELP for one of these commands: DECR, DECRBY, DEL, EXISTS, EXPIRE, GET, GETSET, HDEL, HEXISTS, HGET, HGETALL, HINCRBY, HKEYS, HLEN, HMGET, HMSET, HSET, HVALS, INCR, INCRBY, KEYS, LINDEX, LLEN, LPOP, LPUSH, LRANGE, LREM, LSET, LTRIM, MGET, MSET, MSETNX, MULTI, PEXPIRE, RENAME, RENAMENX, RPOP, RPOPLPUSH, RPUSH, SADD, SCARD, SDIFF, SDIFFSTORE, SET, SETEX, SETNX, SINTER, SINTERSTORE, SISMEMBER, SMEMBERS, SMOVE, SORT, SPOP, SRANDMEMBER, SREM, SUNION, SUNIONSTORE, TTL, TYPE, ZADD, ZCARD, ZCOUNT, ZINCRBY, ZRANGE, ZRANGEBYSCORE, ZRANK, ZREM, ZREMRANGEBYSCORE, ZREVRANGE, ZSCORE
+> quit
+
+
+
+

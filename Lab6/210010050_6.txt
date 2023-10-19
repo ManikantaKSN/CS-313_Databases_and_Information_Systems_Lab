@@ -1,0 +1,40 @@
+1. match (p:Person)-[:DIRECTED]->(m:Movie)<-[r:REVIEWED]-(q:Person) 
+return m.title as Movie, collect(distinct r.rating) as ratings, collect(distinct p.name) as directors
+
+2. match (p:Person) return p.name, case when (p)-[:DIRECTED]->(:Movie) 
+then [(p)-[:DIRECTED]->(m:Movie) | m.title] else null end as MoviesDirected
+
+3. match(p:Person)-[:ACTED_IN]->(m:Movie)<-[:ACTED_IN]-(q:Person)
+WHERE p.name = "Tom Hanks" AND q.name <> "Tom Hanks"
+WITH collect(q.name) AS `Co-Actors of Tom Hanks`,m.title as Movies
+return `Co-Actors of Tom Hanks`, Movies
+
+4. match (q:Person)-[:ACTED_IN]->(m:Movie),(m)<-[:ACTED_IN]-(p:Person {name:"Tom Hanks"}) 
+return q.name as `Co-Actors of Tom Hanks`, collect(m.title) as Movies
+
+5. match(p:Person)-[:ACTED_IN]->(m:Movie)<-[:ACTED_IN]-(q:Person) 
+return [p.name, q.name] as Co_actors, collect(m.title) as List_of_movies
+
+6. match (p:Person)-[:ACTED_IN]->(m:Movie)<-[:ACTED_IN]-(q:Person)
+where p.name<>q.name and id(p)<id(q)
+return [p.name,q.name] as Co_actors,collect(m.title) as List_of_movies
+
+7. match(p:Person) 
+where p.born is not NULL 
+SET p.Current_Age = 2023-p.born
+return p.name, p.Current_Age
+
+8. match (p:Person)
+optional match (p)-[a:ACTED_IN]->(m:Movie)
+With p,count(m.title) as number_of_movies
+set p.Num_movies_acted=number_of_movies
+return p.name, p.Num_movies_acted
+
+9. match(p:Person)
+optional match (p)-[r:REVIEWED]->(m:Movie)
+Return p.name as Name,collect(m.title) as Movies_reviewed
+
+10. match (p:Person)-[:ACTED_IN]->(m:Movie)
+match(x:Person)-[:DIRECTED]->(m)
+WITH collect(DISTINCT p) as numActors,collect(DISTINCT x) as numDirectors,m
+return m.title as Movie, size(numActors) as No_of_actors,size(numDirectors) as No_of_directors
