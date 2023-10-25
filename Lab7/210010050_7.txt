@@ -1,0 +1,128 @@
+-----------------
+Insert and Delete
+-----------------
+
+3.
+set client1 Raman
+Result = Previous value of client1(=Alice) is updated to Raman
+
+4. 
+get client11
+Result = (nil)
+
+6.
+del client11
+Result = (integer) 0
+
+7.
+set client:1:name Alice
+Result = OK
+
+8.
+set client:1:level 1
+Result = OK
+
+--------------------
+Delete based on time
+--------------------
+
+2.
+exists client:1:address
+Result = (integer) 0
+
+3.
+set Message "Hello world"
+Result = OK
+
+6.
+ttl Message
+Result = (integer) -1
+
+7.
+ttl message1
+Result = (integer) -2
+
+10.
+set message2 "Hello"
+persist message2
+Result : (integer) 0
+
+11.
+persist message3
+Result : (integer) 0
+
+-----
+List
+-----
+
+2.
+del Customers
+LPUSH Customers "Alice" "Bob" "Charles"
+
+4.
+lrange Customers 0 1
+
+6.
+LINSERT Customers BEFORE "Bob" "Dumbledore"
+
+9.
+LPOP Customers
+
+10.
+FLUSHDB
+
+----
+Set
+----
+
+2.
+SADD courses "Economics"
+
+4.
+SADD courses "Physics"
+Result: (integer) 0
+
+7.
+sismember courses "Chemistry"
+Result: (integer) 0
+
+10.
+srem courses "Chemistry"
+Result: (integer) 0
+
+11.
+FLUSHDB
+
+-----------
+Ordered set
+-----------
+
+3.
+ZADD Clients 3200 "Charles"
+
+5.
+ZRANK Clients "Dumbledore"
+
+7.
+ZRANGE Clients 0 -1
+
+8.
+FLUSHDB
+
+Hash set
+-------
+
+3.
+HGET Customer:1 address
+
+4.
+HGET Customer:2 name
+
+6.
+HGETALL Customer:2
+
+9.
+HKEYS Customer:2
+
+10.
+HVALS Customer:2
