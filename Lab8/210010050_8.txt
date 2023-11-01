@@ -1,0 +1,72 @@
+Star-marked questions
+_____________________
+
+*)Create and list database
+--------------------------
+
+3. show dbs
+Result: It doesn't show CompanyDB
+   
+*)Insert
+--------
+
+3. show dbs
+Result: It shows CompanyDB
+   
+*)Find
+------
+
+4. db.customers.find({"age": {$lt:27}})
+5. db.customers.find({"age": {$lte:27}})
+
+*)Update
+--------
+
+2. db.customers.update({"name":"Alice"})
+   Result: MongoshInvalidInputError: [COMMON-10001] Missing required argument at position 1 (Collection.update)
+
+*)Delete
+---------
+
+2. db.customers.find()
+
+
+
+EXERCISE(Redis)
+_______________
+
+1. set course:1:title "Data Management"
+   set course:1:NumberOfStudents 3
+   sadd course:1:textbooks "Fundamentals of Database Systems" "No SQL for Mere Mortals"
+  
+2. zadd course:1:students 9.1 Alice 8.9 Bob 9.0 Charles
+
+3. zrange course:1:students 0 -1
+
+4. scard course:1:textbooks
+
+5. rename course:1:textbooks course:1:materials
+
+6. sadd course:1:materials slides
+
+7. sadd course:1:assignment4 Redis MongoDB
+
+8. expire course:1:handout10 100
+
+9. keys *
+
+10. del course:1:NumberOfStudents
+
+
+EXERCISE(MongoDB)
+_________________
+
+1. show dbs
+
+2. show collections
+
+3. db.listingsAndReviews.find({"address.country":"Australia"}, {"_id":1,"name":1})
+
+4. db.listingsAndReviews.find({"bedrooms":{$gte:2}}, {"_id":1,"name":1})
+
+5. db.listingsAndReviews.find({"address.location.is_location_exact":true}, {"_id":1,"name":1,"address":1})
