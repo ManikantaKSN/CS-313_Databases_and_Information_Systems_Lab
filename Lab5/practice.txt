@@ -27,3 +27,19 @@ WHERE
 10. MATCH (p:Person)-[:DIRECTED]->(m:Movie)<-[:ACTED_IN]-(q:Person) WHERE EXISTS ((p)-[:ACTED_IN]->(m)) RETURN m.title, p.name, q.name
 11. MATCH (m:Movie) WHERE m.released IN [2000, 2002, 2003] RETURN m
 
+MULTIPLE PATTERNS
+
+1. MATCH (p:Person{name:"Gene Hackman"})-[:ACTED_IN]->(m:Movie)<-[:DIRECTED]-(q:Person), (r:Person)-[:ACTED_IN]->(m)  RETURN p.name, m.title, q.name, r.name
+2. MATCH (p:Person{name:"James Thompson"})-[f:FOLLOWS]->(q:Person) RETURN p, f, q			< DOUBT >
+3. MATCH (p:Person{name:"James Thompson"})-[f:FOLLOWS*3]->(q:Person) RETURN p, f, q			< DOUBT >
+4. MATCH (p:Person{name:"James Thompson"})-[f:FOLLOWS*..3]->(q:Person) RETURN p, f, q		< DOUBT >
+5. MATCH (p:Person{name:"James Thompson"})-[f:FOLLOWS*]->(q:Person) RETURN p, f, q			< DOUBT >
+6. MATCH (p:Person) WHERE p.name starts with "Tom" OPTIONAL MATCH (p)-[:DIRECTED]->(m:Movie) RETURN p, m
+7. MATCH (p:Person)-[a:ACTED_IN]->(m:Movie) RETURN p.name, collect(m.title)
+8. MATCH (m:Movie) OPTIONAL MATCH (p:Person)-[r:REVIEWED]->(m) RETURN m.title, collect(p.name), size(collect(p.name))
+9. MATCH (p:Person)-[a:ACTED_IN]->(m:Movie) WITH p AS ACTOR, collect(m.title) AS MOVIES WHERE size(MOVIES) = 5 RETURN ACTOR.name AS ACTOR, MOVIES
+
+DISTINCT, MIN, MAX
+
+1. MATCH (p:Person)-[r:REVIEWED]->(m:Movie) WITH m.title AS movie, avg(r.rating) AS rating RETURN movie, rating  ORDER BY rating DESC LIMIT 5
+2. MATCH (p:Person)-[a:ACTED_IN]->(m:Movie) WITH p AS ACTOR, collect(m.title) AS MOVIES WHERE size(MOVIES) <=3 RETURN ACTOR.name AS ACTOR, MOVIES

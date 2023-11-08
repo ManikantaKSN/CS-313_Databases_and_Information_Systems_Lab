@@ -1,0 +1,53 @@
+#Q1
+match(p:Person)-[d:DIRECTED]->(m:Movie) with p.name as Director_name, collect(m.title) as List_of_movies where size(List_of_movies)>=2 return Director_name, List_of_movies
+
+#Q2
+match (p:Person) with p.name as name,
+case when (p)-[:ACTED_IN]->(:Movie) then [(p)-[:ACTED_IN]->(m:Movie) | m.title]  end as List_of_acted,
+case when (p)-[:DIRECTED]->(:Movie) then [(p)-[:DIRECTED]->(m:Movie) | m.title]  end as List_of_directed
+return name, collect(List_of_acted) as List_of_movies_acted, collect(List_of_directed) as List_of_movies_directed
+
+#Q3
+match (m:Movie) optional match (p:Person)-[:DIRECTED]->(m) with m, count(distinct p.name) as no_of_dir
+set m.num_dir = no_of_dir return m.title,m.num_dir 
+
+#Q4
+match (p:Person)-[:DIRECTED]->(:Movie) where not exists((p)-[:ACTED_IN]->(:Movie)) return distinct(p.name)
+
+#Q5
+--Run this command first
+match (p:Person) where p.born is null set p.born = 0 return p.name, p.born
+--After running above command, run the below command
+create constraint for (p:Person) REQUIRE (p.name,p.born) IS NODE KEY
+
+#Q6
+match(m:Movie)<-[:ACTED_IN]-(p:Person) with m,collect(p.name)as actors where size(actors)>=6 set m:MultiStar return m.title, actors
+
+#Q7
+match (p:Person)-[:ACTED_IN]->(m:MultiStar)optional match (m)<-[:DIRECTED]-(q:Person)optional match(m)<-[:PRODUCED]-(r:Person) return m.title as Movie, case when size(collect(distinct p.name))<>0 then collect(distinct p.name) else null end as actors, case when size(collect(distinct q.name)) <> 0 then collect(distinct q.name) else null end as directors, case when size(collect(distinct r.name)) <> 0 then collect(distinct r.name) else null end as producers
+
+#Q8
+match (m:Movie)<-[:ACTED_IN]-(p:Person)
+match (n:Movie)<-[:ACTED_IN]-(q:Person)
+where p.name <> q.name and m.title<>n.title return m.title, n.title
+#Q9
+match (p:Person {name: "Natalie Portman"}) match (m:Movie) where m.released>p.born return m.title, m.released
+
+#Q10
+match (m:Movie)<-[r:ACTED_IN]-(p:Person)  where size(r.roles) >=2  return m.title, p.name, r.roles
+
+#Q11
+--Run this command first
+match(a1:Person)-[:ACTED_IN]->(:Movie)<-[:ACTED_IN]-(a2:Person) where a1<>a2 MERGE (a1)-[:CO_ACTED]->(a2)
+--Run this next
+match(a:Person {name:"Tom Hanks"}) set a.hanknumber = 0
+--Run this next
+match(a:Person) where a.name<> "Tom Hanks" set a.hanknumber = 100000
+--Now, run the next statement for a large number of times till it shows "no changes" in output
+match(a1:Person)-[:CO_ACTED]->(a2:Person)
+where a1.hanknumber < 100000 and a2.hanknumber = 100000 and a1<>a2
+with a1,  min(a1.hanknumber) as minhank, a2
+set a2.hanknumber = minhank + 1
+
+#Q12
+match (p:Person) return p.name, case when p.born is null or p.born = 0 then p.born else date().year - p.born end as Current_Age

@@ -1,0 +1,380 @@
+Create and list database
+
+3. show dbs
+   it does not show CompanyDB
+   
+Insert
+
+3. show dbs
+   it shows CompanyDB
+   
+Find
+
+4. db.customers.find({"age": {$lt:27}})
+5. db.customers.find({"age": {$lte:27}})
+
+Update
+
+2. db.customers.update({"name":"Alice"})
+   prints MongoshInvalidInputError: [COMMON-10001] Missing required argument at position 1 (Collection.update)
+
+Delete
+
+2. db.customers.find()
+
+
+
+
+Atlas atlas-f4uzxk-shard-0 [primary] test> show dbs
+admin  336.00 KiB
+local    1.68 GiB
+Atlas atlas-f4uzxk-shard-0 [primary] test> use companydb
+switched to db companydb
+Atlas atlas-f4uzxk-shard-0 [primary] companydb> show dbs
+admin  336.00 KiB
+local    1.68 GiB
+Atlas atlas-f4uzxk-shard-0 [primary] companydb> db.customer.insertOne({"name":"Alice", "age":24})
+{
+  acknowledged: true,
+  insertedId: ObjectId("6538f15443b4dca42182cb26")
+}
+Atlas atlas-f4uzxk-shard-0 [primary] companydb> show dbs
+companydb    8.00 KiB
+admin      336.00 KiB
+local        1.68 GiB
+Atlas atlas-f4uzxk-shard-0 [primary] companydb> show collection
+MongoshInvalidInputError: [COMMON-10001] 'collection' is not a valid argument for "show".
+Atlas atlas-f4uzxk-shard-0 [primary] companydb> show companydb
+MongoshInvalidInputError: [COMMON-10001] 'companydb' is not a valid argument for "show".
+Atlas atlas-f4uzxk-shard-0 [primary] companydb> show collections
+customer
+Atlas atlas-f4uzxk-shard-0 [primary] companydb> db.customer.insertMany({"name":"Bob"},{"name":"Charles", "age":26, "level":1}, {"name":"Darshan","age":27})
+MongoInvalidArgumentError: Argument "docs" must be an array of documents
+Atlas atlas-f4uzxk-shard-0 [primary] companydb> db.customer.insertMany([{"name":"Bob"},{"name":"Charles", "age":26, "level":1}, {"name":"Darshan","age":27}])
+{
+  acknowledged: true,
+  insertedIds: {
+    '0': ObjectId("6538f27743b4dca42182cb27"),
+    '1': ObjectId("6538f27743b4dca42182cb28"),
+    '2': ObjectId("6538f27743b4dca42182cb29")
+  }
+}
+Atlas atlas-f4uzxk-shard-0 [primary] companydb> db.customer.find()
+[
+  { _id: ObjectId("6538f15443b4dca42182cb26"), name: 'Alice', age: 24 },
+  { _id: ObjectId("6538f27743b4dca42182cb27"), name: 'Bob' },
+  {
+    _id: ObjectId("6538f27743b4dca42182cb28"),
+    name: 'Charles',
+    age: 26,
+    level: 1
+  },
+  {
+    _id: ObjectId("6538f27743b4dca42182cb29"),
+    name: 'Darshan',
+    age: 27
+  }
+]
+Atlas atlas-f4uzxk-shard-0 [primary] companydb> db.customer.find("age":27)
+Uncaught:
+SyntaxError: Unexpected token, expected "," (1:22)
+
+> 1 | db.customer.find("age":27)
+    |                       ^
+  2 |
+
+Atlas atlas-f4uzxk-shard-0 [primary] companydb> db.customer.find({"age":27})
+[
+  {
+    _id: ObjectId("6538f27743b4dca42182cb29"),
+    name: 'Darshan',
+    age: 27
+  }
+]
+Atlas atlas-f4uzxk-shard-0 [primary] companydb> db.customer.find({"age": {$gt:25})
+Uncaught:
+SyntaxError: Unexpected token, expected "," (1:33)
+
+> 1 | db.customer.find({"age": {$gt:25})
+    |                                  ^
+  2 |
+
+Atlas atlas-f4uzxk-shard-0 [primary] companydb> db.customer.find({"age": {$gt:25}})
+[
+  {
+    _id: ObjectId("6538f27743b4dca42182cb28"),
+    name: 'Charles',
+    age: 26,
+    level: 1
+  },
+  {
+    _id: ObjectId("6538f27743b4dca42182cb29"),
+    name: 'Darshan',
+    age: 27
+  }
+]
+Atlas atlas-f4uzxk-shard-0 [primary] companydb> db.customer.find({"age": {$lt:27}})
+[
+  { _id: ObjectId("6538f15443b4dca42182cb26"), name: 'Alice', age: 24 },
+  {
+    _id: ObjectId("6538f27743b4dca42182cb28"),
+    name: 'Charles',
+    age: 26,
+    level: 1
+  }
+]
+Atlas atlas-f4uzxk-shard-0 [primary] companydb> db.customer.find({"age": {$lte:27}})
+[
+  { _id: ObjectId("6538f15443b4dca42182cb26"), name: 'Alice', age: 24 },
+  {
+    _id: ObjectId("6538f27743b4dca42182cb28"),
+    name: 'Charles',
+    age: 26,
+    level: 1
+  },
+  {
+    _id: ObjectId("6538f27743b4dca42182cb29"),
+    name: 'Darshan',
+    age: 27
+  }
+]
+Atlas atlas-f4uzxk-shard-0 [primary] companydb> db.customer.find({"age": {$lt:27}},{"name":1})
+[
+  { _id: ObjectId("6538f15443b4dca42182cb26"), name: 'Alice' },
+  { _id: ObjectId("6538f27743b4dca42182cb28"), name: 'Charles' }
+]
+Atlas atlas-f4uzxk-shard-0 [primary] companydb> db.customer.find({"age": {$lt:27}},{"name":1,"age":1})
+[
+  { _id: ObjectId("6538f15443b4dca42182cb26"), name: 'Alice', age: 24 },
+  {
+    _id: ObjectId("6538f27743b4dca42182cb28"),
+    name: 'Charles',
+    age: 26
+  }
+]
+Atlas atlas-f4uzxk-shard-0 [primary] companydb> db.customer.find({"age": {$lt:27}},{"name":0})
+[
+  { _id: ObjectId("6538f15443b4dca42182cb26"), age: 24 },
+  { _id: ObjectId("6538f27743b4dca42182cb28"), age: 26, level: 1 }
+]
+Atlas atlas-f4uzxk-shard-0 [primary] companydb> db.customer.find({"age": {$lt:27}},{"name":1})
+[
+  { _id: ObjectId("6538f15443b4dca42182cb26"), name: 'Alice' },
+  { _id: ObjectId("6538f27743b4dca42182cb28"), name: 'Charles' }
+]
+Atlas atlas-f4uzxk-shard-0 [primary] companydb> db.customer.find({"age": {$lt:27}},{"name":1},{"age":0})
+[
+  { _id: ObjectId("6538f15443b4dca42182cb26"), name: 'Alice' },
+  { _id: ObjectId("6538f27743b4dca42182cb28"), name: 'Charles' }
+]
+Atlas atlas-f4uzxk-shard-0 [primary] companydb> db.customer.find({"age": {$lt:27}},{"name":0},{"age":1})
+[
+  { _id: ObjectId("6538f15443b4dca42182cb26"), age: 24 },
+  { _id: ObjectId("6538f27743b4dca42182cb28"), age: 26, level: 1 }
+]
+Atlas atlas-f4uzxk-shard-0 [primary] companydb> db.customer.find({"age": {$lt:27}},{"name":1},{"age":1})
+[
+  { _id: ObjectId("6538f15443b4dca42182cb26"), name: 'Alice' },
+  { _id: ObjectId("6538f27743b4dca42182cb28"), name: 'Charles' }
+]
+Atlas atlas-f4uzxk-shard-0 [primary] companydb> db.customer.find({"age": {$lt:27}},{"name":1},{"age":0})
+[
+  { _id: ObjectId("6538f15443b4dca42182cb26"), name: 'Alice' },
+  { _id: ObjectId("6538f27743b4dca42182cb28"), name: 'Charles' }
+]
+Atlas atlas-f4uzxk-shard-0 [primary] companydb> db.customer.insertOne({"name":"Harry", "age":25, "address":{"street":"75,Bd. Saint Germain", "city":" Paris", "Country" :"France"}})
+{
+  acknowledged: true,
+  insertedId: ObjectId("6538f84b43b4dca42182cb2a")
+}
+Atlas atlas-f4uzxk-shard-0 [primary] companydb> db.customer.find()
+[
+  { _id: ObjectId("6538f15443b4dca42182cb26"), name: 'Alice', age: 24 },
+  { _id: ObjectId("6538f27743b4dca42182cb27"), name: 'Bob' },
+  {
+    _id: ObjectId("6538f27743b4dca42182cb28"),
+    name: 'Charles',
+    age: 26,
+    level: 1
+  },
+  {
+    _id: ObjectId("6538f27743b4dca42182cb29"),
+    name: 'Darshan',
+    age: 27
+  },
+  {
+    _id: ObjectId("6538f84b43b4dca42182cb2a"),
+    name: 'Harry',
+    age: 25,
+    address: {
+      street: '75,Bd. Saint Germain',
+      city: ' Paris',
+      Country: 'France'
+    }
+  }
+]
+Atlas atlas-f4uzxk-shard-0 [primary] companydb> db.customer.find({"address.city":"Paris"})
+
+Atlas atlas-f4uzxk-shard-0 [primary] companydb> db.customer.find({"address":{"city":"Paris"}})
+
+Atlas atlas-f4uzxk-shard-0 [primary] companydb> db.customer.find({"address.city":"Paris"})
+
+Atlas atlas-f4uzxk-shard-0 [primary] companydb> db.customer.find({"address.city":" Paris"})
+[
+  {
+    _id: ObjectId("6538f84b43b4dca42182cb2a"),
+    name: 'Harry',
+    age: 25,
+    address: {
+      street: '75,Bd. Saint Germain',
+      city: ' Paris',
+      Country: 'France'
+    }
+  }
+]
+Atlas atlas-f4uzxk-shard-0 [primary] companydb> db.customer.update({"name":"Alice"},{$set:{"age":26}})
+DeprecationWarning: Collection.update() is deprecated. Use updateOne, updateMany, or bulkWrite.
+{
+  acknowledged: true,
+  insertedId: null,
+  matchedCount: 1,
+  modifiedCount: 1,
+  upsertedCount: 0
+}
+Atlas atlas-f4uzxk-shard-0 [primary] companydb> db.customer.find()
+[
+  { _id: ObjectId("6538f15443b4dca42182cb26"), name: 'Alice', age: 26 },
+  { _id: ObjectId("6538f27743b4dca42182cb27"), name: 'Bob' },
+  {
+    _id: ObjectId("6538f27743b4dca42182cb28"),
+    name: 'Charles',
+    age: 26,
+    level: 1
+  },
+  {
+    _id: ObjectId("6538f27743b4dca42182cb29"),
+    name: 'Darshan',
+    age: 27
+  },
+  {
+    _id: ObjectId("6538f84b43b4dca42182cb2a"),
+    name: 'Harry',
+    age: 25,
+    address: {
+      street: '75,Bd. Saint Germain',
+      city: ' Paris',
+      Country: 'France'
+    }
+  }
+]
+Atlas atlas-f4uzxk-shard-0 [primary] companydb> db.customer.update({"name":"Alice"},{$set:{"age":29}})
+{
+  acknowledged: true,
+  insertedId: null,
+  matchedCount: 1,
+  modifiedCount: 1,
+  upsertedCount: 0
+}
+Atlas atlas-f4uzxk-shard-0 [primary] companydb> db.customer.find()
+[
+  { _id: ObjectId("6538f15443b4dca42182cb26"), name: 'Alice', age: 29 },
+  { _id: ObjectId("6538f27743b4dca42182cb27"), name: 'Bob' },
+  {
+    _id: ObjectId("6538f27743b4dca42182cb28"),
+    name: 'Charles',
+    age: 26,
+    level: 1
+  },
+  {
+    _id: ObjectId("6538f27743b4dca42182cb29"),
+    name: 'Darshan',
+    age: 27
+  },
+  {
+    _id: ObjectId("6538f84b43b4dca42182cb2a"),
+    name: 'Harry',
+    age: 25,
+    address: {
+      street: '75,Bd. Saint Germain',
+      city: ' Paris',
+      Country: 'France'
+    }
+  }
+]
+Atlas atlas-f4uzxk-shard-0 [primary] companydb> db.customer.deleteOne({"name":"Bob"})
+{ acknowledged: true, deletedCount: 1 }
+Atlas atlas-f4uzxk-shard-0 [primary] companydb> db.customer.find()
+[
+  { _id: ObjectId("6538f15443b4dca42182cb26"), name: 'Alice', age: 29 },
+  {
+    _id: ObjectId("6538f27743b4dca42182cb28"),
+    name: 'Charles',
+    age: 26,
+    level: 1
+  },
+  {
+    _id: ObjectId("6538f27743b4dca42182cb29"),
+    name: 'Darshan',
+    age: 27
+  },
+  {
+    _id: ObjectId("6538f84b43b4dca42182cb2a"),
+    name: 'Harry',
+    age: 25,
+    address: {
+      street: '75,Bd. Saint Germain',
+      city: ' Paris',
+      Country: 'France'
+    }
+  }
+]
+Atlas atlas-f4uzxk-shard-0 [primary] companydb> 
+(To exit, press Ctrl+C again or Ctrl+D or type .exit)
+Atlas atlas-f4uzxk-shard-0 [primary] companydb> db.customer.update({"name":"Alice"})
+MongoshInvalidInputError: [COMMON-10001] Missing required argument at position 1 (Collection.update)
+Atlas atlas-f4uzxk-shard-0 [primary] companydb> show dbs
+companydb   72.00 KiB
+admin      336.00 KiB
+local        1.68 GiB
+Atlas atlas-f4uzxk-shard-0 [primary] companydb> db.customer.drop()
+true
+Atlas atlas-f4uzxk-shard-0 [primary] companydb> show dbs
+admin  336.00 KiB
+local    1.68 GiB
+Atlas atlas-f4uzxk-shard-0 [primary] companydb> show dbs
+sample_mflix    8.00 KiB
+admin         336.00 KiB
+local           1.68 GiB
+Atlas atlas-f4uzxk-shard-0 [primary] companydb> show dbs
+sample_mflix    2.70 MiB
+admin         336.00 KiB
+local           1.68 GiB
+Atlas atlas-f4uzxk-shard-0 [primary] companydb> show dbs
+sample_mflix       9.12 MiB
+sample_training    1.41 MiB
+admin            336.00 KiB
+local              1.68 GiB
+Atlas atlas-f4uzxk-shard-0 [primary] companydb> show dbs
+sample_mflix       9.12 MiB
+sample_training    6.01 MiB
+admin            336.00 KiB
+local              1.68 GiB
+Atlas atlas-f4uzxk-shard-0 [primary] companydb> show dbs
+sample_mflix          9.15 MiB
+sample_restaurants    1.31 MiB
+sample_training      27.34 MiB
+admin               336.00 KiB
+local                 1.68 GiB
+Atlas atlas-f4uzxk-shard-0 [primary] companydb> show dbs
+sample_airbnb        52.28 MiB
+sample_analytics      9.01 MiB
+sample_geospatial     1.23 MiB
+sample_guides        40.00 KiB
+sample_mflix        112.69 MiB
+sample_restaurants    6.46 MiB
+sample_supplies       1.05 MiB
+sample_training      50.21 MiB
+sample_weatherdata    2.59 MiB
+admin               336.00 KiB
+local                 1.68 GiB
+Atlas atlas-f4uzxk-shard-0 [primary] companydb> 
